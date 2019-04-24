@@ -1,43 +1,33 @@
-
-/* The rough idea for this interaction with the input field - 
-take a number and display all it's factors - timer test for numbers
-Finding factors math
-*/
-
 // First row of table
 const toTwelve = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-
 // This saves the numbers that are generated for the user to see - the 12x12 table.
 let collectNumbers = []
 
-/* $('body').on('keydown', function (e) {
-    const keyC = e.keyCode
-    if (keyC === 13){
-        let varN = document.getElementById('inputN').value
-        varN = varN / 2 *3 + 2
-        $('.game-center p').text(varN)
-        console.log('we happened')
+class gameTimer{
+    constructor(){
+    this.settings = 10;
     }
-}) */
+    
+    get settings(){
+        return this._setting
+    }
 
-const gameTimer = {
-    settings: 10,
     setTimer(setting){
         return document.getElementById('timer-counter').innerHTML = setting
-    },       
+    }
  }
 
-    const countDownN = (num) => {   
-            console.log(gameTimer.settings)
-            document.getElementById('timer-counter').innerHTML = num
-            const innerCountDown = setInterval(() => {
-                document.getElementById('timer-counter').innerHTML--
-                let htmlTimer = parseInt(document.getElementById('timer-counter').innerHTML)
-                if(htmlTimer === 0){
-                        clearInterval(innerCountDown)
-                    }
-                }, 1000)  
-            }
+const countDownN = (num) => {   
+    console.log(gameTimer.settings)
+    document.getElementById('timer-counter').innerHTML = num
+    const innerCountDown = setInterval(() => {
+    document.getElementById('timer-counter').innerHTML--
+    let htmlTimer = parseInt(document.getElementById('timer-counter').innerHTML)
+    if(htmlTimer === 0){
+            clearInterval(innerCountDown)
+        }
+    }, 1000)  
+}
     
 
 function changeDoc(element, clId, html){
@@ -71,10 +61,7 @@ inputField.addEventListener('keydown', function(e){
 })
 
 // Show table button event handler
-document.addEventListener('click', function(e){
-    /* Event handler checks to see if what was clicked was the button
-       that triggers this event. Else, return. */
-    if(!e.target.matches('#show-table')) return;   
+document.getElementById('show-table').addEventListener('click', function(e){ 
     // Checks to see if table is already showing.
     if(document.querySelector('#numOnBoard1')) return;
     // Show game-hud
@@ -128,11 +115,11 @@ document.querySelector('.hard').addEventListener('click', function(e){
 
 
 // Start button event handler
-document.addEventListener('click', function(e){
+document.querySelector('.start-game').addEventListener('click', function(e){
     if(!event.target.matches('.start-game')) return;
     resetGame()
     
-    let gameMessage = document.querySelector('.game-messages')
+    let gameMessage = document.getElementById('game-messages')
     gameMessage.prepend(document.createTextNode('Game Starts in...'))
     let gameTimer = document.getElementById('game-start-timer')
 
@@ -143,7 +130,7 @@ document.addEventListener('click', function(e){
     let htmlTimer = parseInt(document.getElementById('game-start-timer').innerHTML)
     
     if(htmlTimer === 0){
-            document.querySelector('.game-messages').textContent = ''
+            document.getElementById('game-messages').textContent = ''
             document.getElementById('game-start-timer').textContent = ''
             document.getElementById('rando-num').innerHTML = randomNumber()
             console.log(gameTimer.settings)
@@ -161,7 +148,7 @@ the given index #.
 */
 const printRow = (varN) => {
     varN.forEach(function(e){
-        let target = document.querySelector('.inside-game')
+        let target = document.querySelector('#inside-game')
         let newE = document.createElement('a')
         newE.setAttribute('href', '#')
         newE.id = 'numOnBoard' + e
@@ -197,10 +184,10 @@ const isFactors = (num) => {
     return collectFactors
 }
 
-// Choose a random number based on the a tags created under '.inside-game'. Made to be easily updated.
+// Choose a random number based on the a tags created under '#inside-game'. Made to be easily updated.
 const randomNumber = () => {
-    // This saves the # value of the last child of div.inside-game. 
-    let highestNum = parseInt(document.querySelector('.inside-game').lastChild.innerHTML)
+    // This saves the # value of the last child of #inside-game. 
+    let highestNum = parseInt(document.getElementById('inside-game').lastChild.innerHTML)
     let chooseNum = 0
     let killSwitch = false;
     // This loop creates a random number and checks it against the collectNumbers array  
