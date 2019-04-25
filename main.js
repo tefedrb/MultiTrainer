@@ -3,19 +3,15 @@ const toTwelve = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 // This saves the numbers that are generated for the user to see - the 12x12 table.
 let collectNumbers = []
 
-class gameTimer{
-    constructor(){
-    this.settings = 10;
-    }
-    
-    get settings(){
-        return this._setting
-    }
 
+const gameTimer = {
+    settings: 10,
     setTimer(setting){
         return document.getElementById('timer-counter').innerHTML = setting
-    }
+    }       
  }
+
+
 
 const countDownN = (num, idElement) => {   
     console.log(gameTimer.settings)
@@ -27,22 +23,6 @@ const countDownN = (num, idElement) => {
             clearInterval(innerCountDown)
         }
     }, 1000)  
-}
-    
-
-function changeDoc(element, clId, html){
-    if(html === html && clId === cl || clId === iD ){
-      return document.querySelector(element).innerHTML
-    }
-    if(clId === cl){
-      return document.querySelector(element)
-    }
-    if(clId === iD){
-      return document.getElementById(element)
-    }
-    if(clId === cls){
-       return document.getElementsByClassName(element)
-    }
 }
 
 
@@ -60,33 +40,58 @@ inputField.addEventListener('keydown', function(e){
     }
 })
 
-// Show table button event handler
+
+// Show-table button event handler
 document.getElementById('show-table').addEventListener('click', function(e){ 
+    
     // Checks to see if table is already showing.
     if(document.querySelector('#numOnBoard1')) return;
+    
     // Show game-hud
     document.getElementById('game-hud').style.display = 'block'
     
-    // Show Buttons by adding a class to the corresponding elements
+    // Show Buttons by adding a class to the corresponding elements using class 'buttons'
     let getButtons = document.getElementsByClassName('buttons')
     for(let i = 0; i < getButtons.length; i++){
         getButtons[i].classList.add('buttonsAppear')
     }
     
-    //Grey out start button until difficulty is chosen
-    document.querySelector('.start-game').disabled = true;
-
+    /* I'm using this function to grey out "start-game" until
+     the user clicks on a difficulty */
+    setDifficulty('start-game', 15, 'buttons')
+    
+    // This code sets up the multiplication chart
     let newArr = toTwelve
     for(let i = 1; i < 13; i++) {
         console.log('Iterate')
-        printRow(newArr)   
-        newArr = nextRow(newArr)    
+        printRow(newArr, 'inside-game', 'a', 'numOnBoard')   
+        newArr = nextRow(newArr, toTwelve)    
     }  
 }, false)
 
 
-//Choosing difficulty
-document.querySelector('.easy').addEventListener('click', function(e){
+// Choosing difficulty 
+const setDifficulty = (setting, duration, classN) => {
+    gameTimer.settings = duration
+    let selectAll = document.getElementsByClassName(classN)
+   
+    // Go through each element in the array and re-enable
+    for(let i = 0; i < selectAll.length; i++){
+        selectAll[i].disabled = false
+    }
+    //Named Item will search through the HTML collection (array of nodes) and find one with
+    // a matching id in it's brackets
+    selectAll.namedItem(setting).disabled = true
+}
+
+// FUNCTION WITHIN A FUNCTION AND NOW THESE WORK??
+document.getElementById('easy').addEventListener('click', ()=> {setDifficulty('easy', 15, 'buttons')})
+document.getElementById('medium').addEventListener('click', ()=> {setDifficulty('medium', 10, 'buttons')})
+document.getElementById('hard').addEventListener('click', ()=> {setDifficulty('hard', 5, 'buttons')})
+
+
+// Choosing difficulty - the code directly above is suppose to replace what's below
+/* document.querySelector('.easy').addEventListener('click', function(e){
     gameTimer.settings = 15
     document.querySelector('.easy').disabled = true;
     document.querySelector('.medium').disabled = false;
@@ -108,15 +113,12 @@ document.querySelector('.hard').addEventListener('click', function(e){
     document.querySelector('.medium').disabled = false;
     document.querySelector('.hard').disabled = true;
     document.querySelector('.start-game').disabled = false;
-})
-
-
-
+}) */
 
 
 // Start button event handler
-document.querySelector('.start-game').addEventListener('click', function(e){
-    if(!event.target.matches('.start-game')) return;
+document.getElementById('start-game').addEventListener('click', function(e){
+    if(!event.target.matches('#start-game')) return;
     resetGame()
     
     let gameMessage = document.getElementById('game-messages')
@@ -146,23 +148,24 @@ document.querySelector('.start-game').addEventListener('click', function(e){
 newE = new element. Set attributes than name based off of the value of within 
 the given index #.
 */
-const printRow = (varN) => {
-    varN.forEach(function(e){
-        let target = document.querySelector('#inside-game')
-        let newE = document.createElement('a')
+const printRow = (addArray, addHere, createElement, chooseId) => {
+    addArray.forEach(function(e){
+        let target = document.getElementById(addHere)
+        let newE = document.createElement(createElement)
         newE.setAttribute('href', '#')
-        newE.id = 'numOnBoard' + e
+        newE.id = chooseId + e
         newE.innerHTML = e
-        //Adding to global variable (an array) 'collectNumbers'
+        // Adding to global variable (an array) 'collectNumbers'
         collectNumbers.push(e)
        return target.appendChild(newE)
     })
 }
 
+
 // Helps generate new rows based off of the toTwelve array
-const nextRow = (varN) => {
-    let holdZero = varN[0] + 1
-    let newArry = toTwelve.map(function(e){
+const nextRow = (newRowArray, exampleArray) => {
+    let holdZero = newRowArray[0] + 1
+    let newArry = exampleArray.map(function(e){
         return e * holdZero
     })
     newArry.shift()
@@ -170,7 +173,8 @@ const nextRow = (varN) => {
     return newArry
 }
 
-//Finds the factors of the input number (factors 1 - 12)
+
+// Finds the factors of the input number (factors 1 - 12)
 const isFactors = (num) => {
     let toTwelveTwo = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     let collectFactors = []
@@ -183,6 +187,7 @@ const isFactors = (num) => {
     })
     return collectFactors
 }
+
 
 // Choose a random number based on the a tags created under '#inside-game'. Made to be easily updated.
 const randomNumber = () => {
@@ -242,7 +247,6 @@ const userInput = (num) => {
         target.appendChild(newSpan)
         returnGame('loss')
         console.log('wrong answer: ' + num) //wrong answer!!
-
     }
     // might be able to simplify everything using this i/o here
     return num
@@ -265,7 +269,6 @@ const userInput = (num) => {
         return document.getElementById('counter').innerHTML = 0
         // return newRound('loss')
     }  
-    
 } 
 
  
@@ -277,7 +280,6 @@ const resetGame = () => {
 }
 
 
-
 // --------------------------------------------------------------------------------------------
                             /* Notes to self  */
 
@@ -287,35 +289,15 @@ const resetGame = () => {
 
 // Can you beat my score?? Time My Score
 
-// on hitting return in the input field clear the field
+// On hitting return in the input field clear the field.
 
 // Create functions for changing html etc.
+
+// 
 
 // --------------------------------------------------------------------------------------------
 
                         /* Extra Stuff/Pending */
-/*
-let seconds = 0;
-let minutes = 0; 
-*/
 
-
-/* WHY ISN'T THIS WORKING
-function removeElement(parentDiv, childDiv){
-    if (childDiv == parentDiv) {
-         alert("The parent div cannot be removed.");
-    }
-    else if (document.querySelector(childDiv)) {  
-        console.log('check')
-         var child = document.querySelector(childDiv);
-         var parent = document.querySelector(parentDiv);
-         parent.removeChild(child);
-    }
-    else {
-         ;
-         return false;
-    }
-}
-*/
 
 

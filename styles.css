@@ -221,7 +221,7 @@ div.game-center {
     background-color: black;
 }
 
-.start-game {
+#start-game {
     display: none;
     position: absolute;
     top: 15px;
@@ -230,7 +230,7 @@ div.game-center {
     height: 25px; 
 }
 
-.easy {
+#easy {
     display: none;
     position: absolute;
     top: 45px;
@@ -239,7 +239,7 @@ div.game-center {
     height: 20px; 
 }
 
-.medium {
+#medium {
     display: none;
     position: absolute;
     top: 45px;
@@ -247,7 +247,7 @@ div.game-center {
     text-align: center;
     height: 20px; 
 }
-.hard {
+#hard {
     display: none;
     position: absolute;
     top: 45px;
@@ -257,7 +257,7 @@ div.game-center {
 }
 
 .buttonsAppear {
-    display: block;
+    display: block !important;
 }
 
 #game-start-timer {
