@@ -17,12 +17,12 @@ class gameTimer{
     }
  }
 
-const countDownN = (num) => {   
+const countDownN = (num, idElement) => {   
     console.log(gameTimer.settings)
-    document.getElementById('timer-counter').innerHTML = num
+    document.getElementById(idElement).innerHTML = num
     const innerCountDown = setInterval(() => {
-    document.getElementById('timer-counter').innerHTML--
-    let htmlTimer = parseInt(document.getElementById('timer-counter').innerHTML)
+    document.getElementById(idElement).innerHTML--
+    let htmlTimer = parseInt(document.getElementById(idElement).innerHTML)
     if(htmlTimer === 0){
             clearInterval(innerCountDown)
         }
@@ -134,7 +134,7 @@ document.querySelector('.start-game').addEventListener('click', function(e){
             document.getElementById('game-start-timer').textContent = ''
             document.getElementById('rando-num').innerHTML = randomNumber()
             console.log(gameTimer.settings)
-            countDownN(gameTimer.settings)
+            countDownN(gameTimer.settings, 'timer-counter')
             clearInterval(gameStartCount)
         }
     }, 1000)  
