@@ -3,14 +3,12 @@ const toTwelve = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 // This saves the numbers that are generated for the user to see - the 12x12 table.
 let collectNumbers = []
 
-
 const gameTimer = {
     settings: 10,
     setTimer(setting){
         return document.getElementById('timer-counter').innerHTML = setting
     }       
  }
-
 
 
 const countDownN = (num, idElement) => {   
@@ -118,12 +116,13 @@ document.querySelector('.hard').addEventListener('click', function(e){
 
 // Start button event handler
 document.getElementById('start-game').addEventListener('click', function(e){
-    if(!event.target.matches('#start-game')) return;
+    
     resetGame()
     
     let gameMessage = document.getElementById('game-messages')
     gameMessage.prepend(document.createTextNode('Game Starts in...'))
-    let gameTimer = document.getElementById('game-start-timer')
+
+    /* let gameTimer = document.getElementById('game-start-timer') */
 
     document.getElementById('game-start-timer').innerHTML = 3
     
@@ -140,7 +139,6 @@ document.getElementById('start-game').addEventListener('click', function(e){
             clearInterval(gameStartCount)
         }
     }, 1000)  
-   
 })
 
 
@@ -205,8 +203,8 @@ const randomNumber = () => {
                 return chooseNum
             }
         })
-     }
-     return chooseNum
+    }
+    return chooseNum
 } 
 
 
@@ -229,7 +227,7 @@ const userInput = (num) => {
             newSpan.classList.add('correct-user-input')
                 newSpan.innerHTML = num
  
-            if (isFactorsArr.reduce((a,b) => {
+            if(isFactorsArr.reduce((a,b) => {
                 return a+b
             }) === compareArr.reduce((a,b) => {
                 return a+b
