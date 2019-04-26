@@ -3,16 +3,79 @@ const toTwelve = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 // This saves the numbers that are generated for the user to see - the 12x12 table.
 let collectNumbers = []
 
-const gameTimer = {
+const gameHUD = {
     settings: 10,
+    winStreak: 0,
+    best: 0,
+    answers: [],
+    factor: 0,
+    findFactors: [],
+    
     setTimer(setting){
+        this.settings = setting
         return document.getElementById('timer-counter').innerHTML = setting
-    }       
+    },
+    setFactor(num){
+        this.factor = num
+        return document.getElementById('rando-num').innerText = num
+    },
+
+    setWin(num){
+        this.winStreak = num  
+        return document.getElementById('win-counter').innerText = num
+    },  
+    
+    setBest(num){
+        this.best = num
+        return document.getElementById('best-counter').innerText = num
+    },
+ }
+
+
+ const gameTable = {
+    firstRow: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+    // This replaces chart
+    fullChart: [],
+    collectFactors: [],
+    printRowN(addArr, addHere, createElement, chooseId){
+        addArr.forEach(function(e){
+            let target = document.getElementById(addHere)
+            let newE = document.createElement(createElement)
+            newE.setAttribute('href', '#')
+            newE.id = chooseId + e
+            newE.innerHTML = e
+            // Adding to global variable (an array) 'collectNumbers'
+            gameTable.collectFactors.push(e)
+           return target.appendChild(newE)
+        })
+    },
+    nextRowN(newRowArray, exampleArray){
+        let holdZero = newRowArray[0] + 1
+        let newArry = exampleArray.map(function(e){
+            return e * holdZero
+        })
+        newArry.shift()
+        newArry.unshift(holdZero)
+        return newArry
+    },
+    isFactorsN(num){
+        let iterateArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+        this.collectFactors = []
+        let firstRow = this.firstRow
+        iterateArr.forEach(function(i){
+            firstRow.forEach(function(j){
+                if(j * i === num) {
+                    gameTable.collectFactors.push(i)
+                }
+            })
+        })
+        return this.collectFactors
+    }
  }
 
 
 const countDownN = (num, idElement) => {   
-    console.log(gameTimer.settings)
+    console.log(gameHUD.settings)
     document.getElementById(idElement).innerHTML = num
     const innerCountDown = setInterval(() => {
     document.getElementById(idElement).innerHTML--
@@ -51,7 +114,9 @@ document.getElementById('show-table').addEventListener('click', function(e){
     // Show Buttons by adding a class to the corresponding elements using class 'buttons'
     let getButtons = document.getElementsByClassName('buttons')
     for(let i = 0; i < getButtons.length; i++){
-        getButtons[i].classList.add('buttonsAppear')
+        getButtons[i].style.display = 'block' /*
+        maybe delete this from styles.css if all works
+         classList.add('buttonsAppear\') */
     }
     
     /* I'm using this function to grey out "start-game" until
@@ -62,15 +127,15 @@ document.getElementById('show-table').addEventListener('click', function(e){
     let newArr = toTwelve
     for(let i = 1; i < 13; i++) {
         console.log('Iterate')
-        printRow(newArr, 'inside-game', 'a', 'numOnBoard')   
-        newArr = nextRow(newArr, toTwelve)    
+        gameTable.printRowN(newArr, 'inside-game', 'a', 'numOnBoard')   
+        newArr = gameTable.nextRowN(newArr, toTwelve)    
     }  
 }, false)
 
 
 // Choosing difficulty 
 const setDifficulty = (setting, duration, classN) => {
-    gameTimer.settings = duration
+    gameHUD.settings = duration
     let selectAll = document.getElementsByClassName(classN)
    
     // Go through each element in the array and re-enable
@@ -90,7 +155,7 @@ document.getElementById('hard').addEventListener('click', ()=> {setDifficulty('h
 
 // Choosing difficulty - the code directly above is suppose to replace what's below
 /* document.querySelector('.easy').addEventListener('click', function(e){
-    gameTimer.settings = 15
+    gameHUD.settings = 15
     document.querySelector('.easy').disabled = true;
     document.querySelector('.medium').disabled = false;
     document.querySelector('.hard').disabled = false;
@@ -98,7 +163,7 @@ document.getElementById('hard').addEventListener('click', ()=> {setDifficulty('h
 })
 
 document.querySelector('.medium').addEventListener('click', function(e){
-    gameTimer.settings = 10
+    gameHUD.settings = 10
     document.querySelector('.easy').disabled = false;
     document.querySelector('.medium').disabled = true;
     document.querySelector('.hard').disabled = false;
@@ -106,7 +171,7 @@ document.querySelector('.medium').addEventListener('click', function(e){
 })
 
 document.querySelector('.hard').addEventListener('click', function(e){
-    gameTimer.settings = 5
+    gameHUD.settings = 5
     document.querySelector('.easy').disabled = false;
     document.querySelector('.medium').disabled = false;
     document.querySelector('.hard').disabled = true;
@@ -122,7 +187,7 @@ document.getElementById('start-game').addEventListener('click', function(e){
     let gameMessage = document.getElementById('game-messages')
     gameMessage.prepend(document.createTextNode('Game Starts in...'))
 
-    /* let gameTimer = document.getElementById('game-start-timer') */
+    /* let gameHUD = document.getElementById('game-start-timer') */
 
     document.getElementById('game-start-timer').innerHTML = 3
     
@@ -133,20 +198,26 @@ document.getElementById('start-game').addEventListener('click', function(e){
     if(htmlTimer === 0){
             document.getElementById('game-messages').textContent = ''
             document.getElementById('game-start-timer').textContent = ''
-            document.getElementById('rando-num').innerHTML = randomNumber()
-            console.log(gameTimer.settings)
-            countDownN(gameTimer.settings, 'timer-counter')
+            /* document.getElementById('rando-num').innerHTML = randomNumber() */
+            
+            gameHUD.setFactor(randomNumber())
+
+            console.log(gameHUD.settings)
+            countDownN(gameHUD.settings, 'timer-counter')
             clearInterval(gameStartCount)
         }
     }, 1000)  
 })
 
 
+
+
+
 /* Enter an array. Target = where the elements will be made. 
 newE = new element. Set attributes than name based off of the value of within 
 the given index #.
 */
-const printRow = (addArray, addHere, createElement, chooseId) => {
+/* const printRow = (addArray, addHere, createElement, chooseId) => {
     addArray.forEach(function(e){
         let target = document.getElementById(addHere)
         let newE = document.createElement(createElement)
@@ -157,11 +228,11 @@ const printRow = (addArray, addHere, createElement, chooseId) => {
         collectNumbers.push(e)
        return target.appendChild(newE)
     })
-}
+} */
 
 
 // Helps generate new rows based off of the toTwelve array
-const nextRow = (newRowArray, exampleArray) => {
+/* const nextRow = (newRowArray, exampleArray) => {
     let holdZero = newRowArray[0] + 1
     let newArry = exampleArray.map(function(e){
         return e * holdZero
@@ -170,7 +241,7 @@ const nextRow = (newRowArray, exampleArray) => {
     newArry.unshift(holdZero)
     return newArry
 }
-
+ */
 
 // Finds the factors of the input number (factors 1 - 12)
 const isFactors = (num) => {
@@ -196,7 +267,7 @@ const randomNumber = () => {
     // This loop creates a random number and checks it against the collectNumbers array  
     while(!killSwitch) {  
         chooseNum = Math.floor(Math.random()*highestNum)  
-        collectNumbers.forEach(function(i){
+        gameTable.collectFactors.forEach(function(i){
             // Don't want a number below 12
             if(chooseNum === i && chooseNum > 12) {
                 killSwitch = true
@@ -215,9 +286,9 @@ const userInput = (num) => {
     if (typeof num !== "number"){ 
         return console.log('Stop It')
     }
+    const currentRanNum = gameHUD.factor //parseInt(document.getElementById('rando-num').innerHTML)
+    const isFactorsArr = gameTable.isFactorsN(currentRanNum)
 
-    const currentRanNum = parseInt(document.getElementById('rando-num').innerHTML)
-    const isFactorsArr = isFactors(currentRanNum)
     console.log(isFactorsArr)
     const target = document.querySelector('#answers')
     const newSpan = document.createElement('span')
@@ -225,7 +296,7 @@ const userInput = (num) => {
     if(isFactorsArr.includes(num)){
             compareArr.push(num)
             newSpan.classList.add('correct-user-input')
-                newSpan.innerHTML = num
+            newSpan.innerHTML = num
  
             if(isFactorsArr.reduce((a,b) => {
                 return a+b
@@ -250,21 +321,22 @@ const userInput = (num) => {
     return num
 } 
 
-
+/// WORK HERE
 // Code for a win / loss - connects to user input
  const returnGame = (winLoss) => {
     console.log('made it through')
     if(winLoss === 'win') {
-        document.getElementById('counter').innerHTML++
-        let winCounter = document.getElementById('counter').innerHTML
-        let bestCounter = document.getElementById('best-counter').innerHTML
+        gameHUD.winCounter++
+        /* document.getElementById('win-counter').innerHTML++ */
+        /* let winCounter = document.getElementById('win-counter').innerHTML
+        let bestCounter = document.getElementById('best-counter').innerHTML */
         
-        if(bestCounter < winCounter){
-            return document.getElementById('best-counter').innerHTML = winCounter
+        if(gameHUD.best < gameHUD.winStreak){
+            return gameHUD.winStreak = winCounter
         }
         // return newRound('win')
     } else if(winLoss === 'loss'){
-        return document.getElementById('counter').innerHTML = 0
+        return document.getElementById('win-counter').innerHTML = 0
         // return newRound('loss')
     }  
 } 
@@ -276,6 +348,7 @@ const resetGame = () => {
     element.removeChild(element.firstChild)
    }
 }
+
 
 
 // --------------------------------------------------------------------------------------------
@@ -297,5 +370,62 @@ const resetGame = () => {
 
                         /* Extra Stuff/Pending */
 
+/* const userInput = (num) => {
+    if (typeof num !== "number"){ 
+        return console.log('Stop It')
+    }
 
+    const currentRanNum = parseInt(document.getElementById('rando-num').innerHTML)
+    const isFactorsArr = isFactors(currentRanNum)
+    console.log(isFactorsArr)
+    const target = document.querySelector('#answers')
+    const newSpan = document.createElement('span')
+    
+    if(isFactorsArr.includes(num)){
+            compareArr.push(num)
+            newSpan.classList.add('correct-user-input')
+            newSpan.innerHTML = num
+ 
+            if(isFactorsArr.reduce((a,b) => {
+                return a+b
+            }) === compareArr.reduce((a,b) => {
+                return a+b
+            })) {
+                document.getElementById('rando-num').innerHTML = 'HIYA'
+                    compareArr = []
+                    target.appendChild(newSpan) 
+                    return returnGame('win') //next round!
+            }
+            return target.appendChild(newSpan) 
+            }
+    else {
+        newSpan.classList.add('wrong-user-input')
+        newSpan.innerHTML = num
+        target.appendChild(newSpan)
+        returnGame('loss')
+        console.log('wrong answer: ' + num) //wrong answer!!
+    }
+    // might be able to simplify everything using this i/o here
+    return num
+}  */
 
+/// changed the collectNumbers array to collectFactors property in gameTable
+/* const randomNumber = () => {
+    // This saves the # value of the last child of #inside-game. 
+    let highestNum = parseInt(document.getElementById('inside-game').lastChild.innerHTML)
+    let chooseNum = 0
+    let killSwitch = false;
+    // This loop creates a random number and checks it against the collectNumbers array  
+    while(!killSwitch) {  
+        chooseNum = Math.floor(Math.random()*highestNum)  
+        collectNumbers.forEach(function(i){
+            // Don't want a number below 12
+            if(chooseNum === i && chooseNum > 12) {
+                killSwitch = true
+                return chooseNum
+            }
+        })
+    }
+    return chooseNum
+} 
+*/
