@@ -1,7 +1,7 @@
 /* const gameFunc.HUD = {
     settings: 10,
     setTimer(setting){
-        return document.getElementById('timer-counter').innerHTML = setting
+        return document.getElementById('game-timer').innerHTML = setting
     },       
  }
  */
@@ -71,7 +71,8 @@ document.querySelector('.game-center').addEventListener('click', function(e){
     allIntervals.make(changeColorInner, 1000)
 });
 
-    
+
+
 
 
 /* 
@@ -92,7 +93,7 @@ document.querySelector('.game-center').addEventListener('click', function(e){
                 // This should always be the first time gameOn becomes true
                 gameFunc.HUD.gameOn = true
                 //This is part of the gameOn loop
-            return gameFunc.HUD.countDown(gameFunc.HUD.settings, 'timer-counter', gameFunc.checkGame)   
+            return gameFunc.HUD.countDown(gameFunc.HUD.settings, 'game-timer', gameFunc.checkGame)   
         }
     }, 1000),
     

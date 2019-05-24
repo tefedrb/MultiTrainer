@@ -38,7 +38,7 @@ div.game {
     position: relative;
     flex-direction: row;
     justify-content: center;
-    margin-top: 150px;
+    margin-top: 50px;
     width: 700px;
     height: 700px;
     background-color: rgb(179, 179, 179)
@@ -61,7 +61,7 @@ div.game {
     left: 25px;
 }
 
-#timer-counter {
+#game-timer {
     /* display: none; */
     position: absolute;
     z-index: 2;
@@ -281,6 +281,7 @@ div.game-center {
     background-color: black;
 }
 
+/*
 #test-div {
     height: 100px;
     width: auto;
@@ -295,4 +296,13 @@ div.game-center {
     text-align: center;
     height: 25px;
     width: 25px;
+} */
+
+.numOnBoard {
+    opacity: .2;
 }
+
+.numOnBoard:hover {
+    opacity: 1;
+}
+

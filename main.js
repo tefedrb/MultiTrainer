@@ -28,11 +28,12 @@ document.getElementById('inputN').addEventListener('keydown', function(e){
 });
 
 // Show-table button event handler
-document.getElementById('show-table').addEventListener('click', function(e){ 
+document.querySelector('#show-table').addEventListener('click', function(e){ 
     // Checks to see if table is already showing.
     if(document.querySelector('#numOnBoard1')) return;
+    gameFunc.toggleInput('off')
     // Show game-hud
-    document.getElementById('game-hud').style.display = 'block'
+    document.querySelector('#game-hud').style.display = 'block'
     // Show Buttons by adding a class to the corresponding elements using class 'buttons'
     let getButtons = document.getElementsByClassName('buttons')
     for(let i = 0; i < getButtons.length; i++){
@@ -44,9 +45,16 @@ document.getElementById('show-table').addEventListener('click', function(e){
      the user clicks on a difficulty */
     gameFunc.setDifficulty('start-game', 15)
     // By default we want the stop-game button disabled until we start the game
-    document.getElementById('stop-game').disabled = true
+    document.querySelector('#stop-game').disabled = true
     // This code sets up the multiplication chart
     gameTable.renderTable()  
+
+    // add table.js to index.html
+    const htmlBody = document.querySelector('body');
+    let newScript = document.createElement('script')
+    newScript.setAttribute('type', 'text/javascript')
+    newScript.setAttribute('src', 'table.js')
+    htmlBody.appendChild(newScript)
 }, false);
 
 
@@ -80,16 +88,15 @@ const setIntervals = {
     
 };
 
-
-
- const gameTable = {
+const gameTable = {
     firstRow: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     fullChart: [],
-    printRowN(addArr, addHere, createElement, chooseId){
+    printRowN(addArr, addHere, createElement, chooseId){ // old param chooseId
         addArr.forEach(function(e){
-            let target = document.getElementById(addHere)
+            let target = document.querySelector(addHere)
             let newE = document.createElement(createElement)
             newE.setAttribute('href', '#')
+            newE.classList.add('numOnBoard')
             newE.id = chooseId + e
             newE.innerHTML = e
             gameFunc.HUD.collectFactors.push(e)
@@ -109,8 +116,7 @@ const setIntervals = {
     renderTable(){
         let newArr = gameTable.firstRow
         for(let i = 1; i < 13; i++) {
-            console.log('Iterate')
-            gameTable.printRowN(newArr, 'inside-game', 'a', 'numOnBoard')   
+            gameTable.printRowN(newArr, '#inside-game', 'a', 'numOnBoard')   // old arg 'numOnBoard'
             newArr = gameTable.nextRowN(newArr, gameTable.firstRow)    
         }  
     }
@@ -133,8 +139,8 @@ const setIntervals = {
         
         setFactor(num){
             gameFunc.HUD.factor = num
-            document.getElementById('rando-num').innerText = ''
-            return document.getElementById('rando-num').innerText = num
+            document.querySelector('#rando-num').innerText = ''
+            return document.querySelector('#rando-num').innerText = num
         },
 
         // Finds the factors of the input number (factors 2 - 12)
@@ -175,13 +181,11 @@ const setIntervals = {
     },
 
     startGame(message, timer = 3){
+        
         gameFunc.toggleInput()
         //button Display
         gameFunc.buttonDisplay(true, undefined, undefined, 'stopon')
-        /* document.getElementById('stop-game').disabled = false */
-        if(gameFunc.HUD.gameOn === false){
-            return gameFunc.resetGame('advanced')
-        }
+        
         gameFunc.insertGameMessage(message)
     
         document.getElementById('game-start-timer').innerHTML = timer
@@ -203,7 +207,7 @@ const setIntervals = {
                     // This should always be the first time gameOn becomes true
                     gameFunc.HUD.gameOn = true
                     //This is part of the gameOn loop
-                return gameFunc.countDown(gameFunc.HUD.settings, 'timer-counter', gameFunc.checkGame)   
+                return gameFunc.countDown(gameFunc.HUD.settings, '#game-timer', gameFunc.checkGame)   
             }
         }
 
@@ -214,16 +218,17 @@ const setIntervals = {
         gameFunc.toggleInput()
         gameFunc.HUD.gameOn = false;
         gameFunc.resetGame('basic')
+        setIntervals.clearAll()
     },
     
     resetGame(resetType, userMessage){
         let resetLevel = resetType
+        let element = document.getElementById('answers')
 
         if(document.getElementById('start-game').disabled = true && resetLevel === 'basic'){
             return gameFunc.setDifficulty(undefined, gameFunc.HUD.settings, 'buttons')
         }
         
-        let element = document.getElementById('answers')
         while(element.firstChild){
             element.removeChild(element.firstChild)
         }
@@ -232,6 +237,7 @@ const setIntervals = {
        gameFunc.insertGameMessage('','')
 
        if(resetLevel === 'advanced') {
+            setIntervals.clearAll()
             document.getElementById('rando-num').innerHTML = userMessage
             gameFunc.insertGameMessage('')
             gameFunc.HUD.rightInputs = []
@@ -244,7 +250,6 @@ const setIntervals = {
     returnGame(winLoss){
         console.log('made it through')
             if(winLoss === 'win') {
-                gameFunc.HUD.gameOn = true;
                 gameFunc.HUD.winStreak++
                 if(gameFunc.HUD.best < gameFunc.HUD.winStreak){
                     gameFunc.HUD.best = gameFunc.HUD.winStreak
@@ -260,37 +265,39 @@ const setIntervals = {
         },
 
     // Checks status of game, i.e. If difficultly is high, check to see if there are too many wrong inputs
-    checkGame(check){
+     checkGame(check){
         // Checks if game clock is at zero (write code here...)
-        let gameClock = parseInt(document.querySelector('#timer-counter').innerHTML)
+        let gameTimer = parseInt(document.querySelector('#game-timer').innerHTML)
         
         // This also seems to be creating the game loop
         
-        if(gameClock === 0 || gameClock < 0){
+        if(gameTimer === 0 || gameTimer < 0){
             gameFunc.resetGame('advanced', `Time's Up!`)
             gameFunc.returnGame('loss')
-            return gameFunc.startGame('New Round Starts in...', 3)
+            gameFunc.startGame('New Round Starts in...', 3)
         }
         // Checks game difficulty and runs a check for amount of wrong guesses by user accordingly
         if(gameFunc.HUD.settings === 5) {
             if(gameFunc.HUD.wrongInputs.length > 1){
                 gameFunc.resetGame('advanced', 'ಥ_ಥ')
                 gameFunc.returnGame('loss')
-                return gameFunc.startGame('Too many guesses. New Round Starts in...', 3)  
+                gameFunc.startGame('Too many guesses. New Round Starts in...', 3)  
             }
         }
         if(gameFunc.HUD.settings === 10) {
             if(gameFunc.HUD.wrongInputs.length > 2){
+                console.log('OK SO.... 1')
                 gameFunc.resetGame('advanced', 'ಥ_ಥ')
+                console.log('OK SO.... 2')
                 gameFunc.returnGame('loss')
-                return gameFunc.startGame('Too many guesses. New Round Starts in...', 3)  
+                gameFunc.startGame('Too many guesses. New Round Starts in...', 3)  
             }
         }
         if(gameFunc.HUD.settings === 15) {
             if(gameFunc.HUD.wrongInputs.length > 3){
                 gameFunc.resetGame('advanced', 'ಥ_ಥ')
                 gameFunc.returnGame('loss')
-                return gameFunc.startGame('Too many guesses. New Round Starts in...', 3)  
+                gameFunc.startGame('Too many guesses. New Round Starts in...', 3)  
             }
         }
     },   
@@ -309,24 +316,25 @@ const setIntervals = {
     
     /* This method is responsible for the game timer (might need to make the htmlTimer 
         variable global in order to stop this started by setInterval) */
-    countDown(num, idElement, func, fSettings){   
+    countDown(num, nodeId, func, fSettings){   
         console.log(gameFunc.HUD.settings)
-        document.getElementById(idElement).innerHTML = num
+        const targetNode = document.querySelector(nodeId)
+        targetNode.innerHTML = num
         
         const innerCountDown = () => {
-        document.getElementById(idElement).innerHTML--
-        let gameClock = parseInt(document.getElementById(idElement).innerHTML)
-        // if(checkGame)
+        let clock = Number(targetNode.innerHTML)
+        clock--
+        targetNode.innerHTML = clock
 
         if(gameFunc.HUD.gameOn === false){
             return setIntervals.clear(innerCountDown)
         }
 
-        if(gameClock === 0 || gameClock < 0){
+        if(clock === 0 || clock < 0){
                 // Part of gameOn loop affecting while loop maybe
                 /* checkGame() */
-                gameFunc.setDifficulty('clear', num)
                 setIntervals.clear(innerCountDown)
+                gameFunc.checkGame()
                 return func(fSettings)   
             }
         } 
@@ -336,7 +344,9 @@ const setIntervals = {
     insertGameMessage(message, duration, clock, func, val){
         const messageNode = document.getElementById('game-messages')
         const visualClock = document.getElementById('game-start-timer')
-        let timer = parseInt(duration, 10)
+
+        let timer = parseInt(duration)
+
         if(typeof duration === 'string') {
             visualClock.innerHTML = duration
         }
@@ -422,7 +432,7 @@ const setIntervals = {
                 newSpan.innerHTML = num
             
             /* Checks to see if all correct factors have been input by user (by adding all digits from each array)
-                THIS IS A WIN !!! RESTART ROUND FROM HERE*/
+                THIS IS A WIN !!! RESTART ROUND FROM HERE */
                 if(isFactorsArr.reduce((a,b) => {
                     return a+b
                 }) === gameFunc.HUD.rightInputs.reduce((a,b) => {
@@ -453,6 +463,7 @@ const setIntervals = {
                         target.appendChild(newSpan)
                         gameFunc.insertGameMessage('')
                         gameFunc.insertGameMessage(`${num} doesn't work.`, 2)
+                        console.log('Line 465')
                         return gameFunc.checkGame()
                     }
                 }
@@ -461,55 +472,7 @@ const setIntervals = {
     },
  };
 
-
-/* Interval Object - adding all setIntervals into an object 
- https://stackoverflow.com/questions/8635502/how-do-i-clear-all-intervals */
-/*
- 
-const allIntervals = {
-    gameStartCount: setInterval(() => {
-            // THIS IS AT THE BOTTOM OF THE GAME
-            document.getElementById('game-start-timer').innerHTML--
-            let htmlTimer = parseInt(document.getElementById('game-start-timer').innerHTML)
-        
-            if (htmlTimer === 0 || htmlTimer < 0){
-                    // New addition - trying to fix issues
-                    toggleInput('on')
-                    document.getElementById('game-messages').textContent = ''
-                    document.getElementById('game-start-timer').textContent = ''
-                    
-                    gameFunc.HUD.setFactor(gameFunc.HUD.randomNumber())
-                    
-                    clearInterval(allIntervals.gameStartCount)
-                    // This should always be the first time gameOn becomes true
-                    gameFunc.HUD.gameOn = true
-                    //This is part of the gameOn loop
-                return gameFunc.HUD.countDown(gameFunc.HUD.settings, 'timer-counter', gameFunc.checkGame)   
-            }
-        }, 1000),
-        
-        clear(id){ 
-            return clearInterval(id)
-        }
-    };
-*/
-
-// --------------------------------------------------------------------------------------------
-                            /* Notes to self  */
-
-// Choose random number from table that has factors
-
-// Can you beat my score?? Time My Score
-
-// On hitting return in the input field clear the field.
-
-// Create functions for changing html etc.
- 
-// Functions within functions - call back functions - hoisting - the order of click handlers in the event loop
-
-// --------------------------------------------------------------------------------------------
-
-                        /* Extra Stuff/Pending */
+// export {checkGame};
 
 
 
