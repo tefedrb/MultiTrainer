@@ -58,8 +58,6 @@ document.querySelector('#show-table').addEventListener('click', function(e){
 }, false);
 
 
-
-
 const setIntervals = {
     intervals: [],
         
@@ -145,7 +143,7 @@ const gameTable = {
 
         // Finds the factors of the input number (factors 2 - 12)
         isFactors(num){
-            let iterateArr = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+            let iterateArr = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
             gameFunc.HUD.ranNumberFactors = []
             let firstRow = gameTable.firstRow
             iterateArr.forEach(function(i){
@@ -180,8 +178,7 @@ const gameTable = {
         } 
     },
 
-    startGame(message, timer = 3){
-        
+    startGame(message, timer = 3){     
         gameFunc.toggleInput()
         //button Display
         gameFunc.buttonDisplay(true, undefined, undefined, 'stopon')
