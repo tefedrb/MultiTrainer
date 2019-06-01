@@ -7,6 +7,7 @@ body {
     height: 100%;
     width: 100%;
 }
+
 header {
     display: flex;
     flex-direction: row;
@@ -52,7 +53,6 @@ div.game {
     background-color: black;
 }
 
-
 #timer-one {
     /* display: none; */
     position: absolute;
@@ -76,7 +76,6 @@ div.game {
     top: 61px;
     left: 25px;
 }
-
 
 #best-streak-counter {
     position: absolute;
@@ -102,23 +101,31 @@ div.game {
     font-size: 32px;
     z-index: 2;
     top: 45px;
-    /* left: 50%;
-    transform: translateX(-50%) */
 }
 
-#answers-holder {
+#answers {
     flex-wrap: wrap;
     position: absolute;
-    top: 15px;
+    justify-content: center;
+    top: 0;
     right: 25px;
     height: 100px;
     width: 125px;
     background-color: black;
-    text-align: center;
+    
 }
 
+#answers span {
+    font-size: 18px;
+    transform: translateY(-50%)
+}
 
-#answers {
+#answers p {
+    width: 100%;
+    height: 20px;
+}
+
+/* #answers {
     flex-wrap: wrap;
     position: relative;
     top: 15px;
@@ -127,27 +134,18 @@ div.game {
     width: 125px;
     background-color: black;
     text-align: center;
-}
-
-
-#answers span {
-    margin-right: 5px;
-}
-
-/* #a {
-    display: inline-block;
-    height: 10px;
-
 } */
 
-/* #b {
-    color: yellow;
-} */
 
 .correct-user-input {
     color: yellow;
+    margin-right: 5px;
 }
 
+.wrong-user-input {
+    color: red;
+    margin-right: 6px;
+}
 
 #choices{
     display: block;
@@ -155,7 +153,6 @@ div.game {
     z-index: 2;
     color: yellow;
 }
-
 
 div.game-center {
     display: block;
@@ -168,7 +165,6 @@ div.game-center {
 
 #inside-game {
     position: absolute;
-    /* border: 1px solid red; */
     background-color: rgb(0, 0, 0);
     top: 50%;
     left: 50%;
@@ -180,13 +176,6 @@ div.game-center {
     flex-direction: row;
     justify-content: space-between;
     flex-wrap: wrap;
-}
-
-#inside-game a {
-    margin: 5px;
-    background-color: yellow;
-    height: 20px;
-    width: 35px;
 }
 
 .game-center p {
@@ -207,7 +196,6 @@ div.game-center {
     text-align: center;
     height: 25px;
 }
-
 
 #game-messages {
     display: block;
@@ -281,31 +269,25 @@ div.game-center {
     background-color: black;
 }
 
-/*
-#test-div {
-    height: 100px;
-    width: auto;
-    display: flex;
-    position: absolute;
-    flex-direction: row;
-}
-
-#test-case {
-    margin-top: 41px;
-    position: absolute;
-    text-align: center;
-    height: 25px;
-    width: 25px;
-} */
-
 .numOnBoard {
     opacity: .2;
+    margin: 5px;
+    background-color: yellow;
+    height: 20px;
+    width: 35px;
+    transition: all .2s;
 }
 
 .numOnBoard:hover {
     opacity: 1;
+    background-color: red;
+    color: yellow;
 }
 
-
+.blurry-text {
+    color: transparent;
+    
+    text-shadow: 0 0 5px rgba(255, 0, 0, 0.9)
+}
 
 

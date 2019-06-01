@@ -1,3 +1,5 @@
+
+
 /* gameFunc.toggleInput() */
 
 document.getElementById('easy').addEventListener('click', ()=> {gameFunc.setDifficulty('easy', 15, true)})
@@ -7,6 +9,7 @@ document.getElementById('hard').addEventListener('click', ()=> {gameFunc.setDiff
 // Start button event handler // I added a reset game paramater
 document.getElementById('start-game').addEventListener('click', ()=> {
     gameFunc.HUD.gameOn = true
+    gameFunc.resetGame()
     gameFunc.startGame('New Round Starts in...', 5)
 });
 
@@ -15,20 +18,19 @@ document.getElementById('stop-game').addEventListener('click', ()=>{gameFunc.sto
 
 // Input field event handler (after hitting enter)
 document.getElementById('inputN').addEventListener('keydown', function(e){
+    
     const keyC = e.keyCode
     let currentInput = 0
     if (keyC === 13){
         currentInput = parseInt(document.getElementById('inputN').value)
-         
         gameFunc.userInput(currentInput)
-        
         document.getElementById('inputN').value = ''
-        console.log('done')
     }
 });
 
 // Show-table button event handler
 document.querySelector('#show-table').addEventListener('click', function(e){ 
+    document.querySelector('#show-table').disabled = true;
     // Checks to see if table is already showing.
     if(document.querySelector('#numOnBoard1')) return;
     gameFunc.toggleInput('off')
@@ -43,7 +45,7 @@ document.querySelector('#show-table').addEventListener('click', function(e){
     } 
     /* I'm using this function to grey out "start-game" until
      the user clicks on a difficulty */
-    gameFunc.setDifficulty('start-game', 15)
+    gameFunc.setDifficulty('easy', 15, true)
     // By default we want the stop-game button disabled until we start the game
     document.querySelector('#stop-game').disabled = true
     // This code sets up the multiplication chart
@@ -171,7 +173,6 @@ const gameTable = {
                         killSwitch = true
                         return chooseNum
                     }
-                    console.log('went through WHILE LOOP')
                 })
             }
             return chooseNum
@@ -185,18 +186,18 @@ const gameTable = {
         
         gameFunc.insertGameMessage(message)
     
-        document.getElementById('game-start-timer').innerHTML = timer
+        document.querySelector('#game-start-timer').innerHTML = timer
         
         const gameStartCount = () => {
             // THIS IS AT THE BOTTOM OF THE GAME
-            document.getElementById('game-start-timer').innerHTML--
-            let htmlTimer = parseInt(document.getElementById('game-start-timer').innerHTML)
+            document.querySelector('#game-start-timer').innerHTML--
+            let htmlTimer = parseInt(document.querySelector('#game-start-timer').innerHTML)
         
             if (htmlTimer === 0 || htmlTimer < 0){
                     // New addition - trying to fix issues
                     gameFunc.toggleInput('on')
-                    document.getElementById('game-messages').textContent = ''
-                    document.getElementById('game-start-timer').textContent = ''
+                    document.querySelector('#game-messages').textContent = ''
+                    document.querySelector('#game-start-timer').textContent = ''
                     
                     gameFunc.HUD.setFactor(gameFunc.HUD.randomNumber())
                     
@@ -220,14 +221,14 @@ const gameTable = {
     
     resetGame(resetType, userMessage){
         let resetLevel = resetType
-        let element = document.getElementById('answers')
+        let element = document.querySelector('#answers')
 
-        if(document.getElementById('start-game').disabled = true && resetLevel === 'basic'){
+        if(document.querySelector('#start-game').disabled = true && resetLevel === 'basic'){
             return gameFunc.setDifficulty(undefined, gameFunc.HUD.settings, 'buttons')
         }
         
-        while(element.firstChild){
-            element.removeChild(element.firstChild)
+        while(element.childNodes[3]){
+            element.removeChild(element.childNodes[3])
         }
 
        gameFunc.HUD.setFactor('')
@@ -235,7 +236,9 @@ const gameTable = {
 
        if(resetLevel === 'advanced') {
             setIntervals.clearAll()
-            document.getElementById('rando-num').innerHTML = userMessage
+            if(userMessage){
+                document.querySelector('#rando-num').innerHTML = userMessage
+            }
             gameFunc.insertGameMessage('')
             gameFunc.HUD.rightInputs = []
             gameFunc.HUD.wrongInputs = []
@@ -245,7 +248,6 @@ const gameTable = {
 
     // Code for a win / loss - connects to user input
     returnGame(winLoss){
-        console.log('made it through')
             if(winLoss === 'win') {
                 gameFunc.HUD.winStreak++
                 if(gameFunc.HUD.best < gameFunc.HUD.winStreak){
@@ -283,9 +285,7 @@ const gameTable = {
         }
         if(gameFunc.HUD.settings === 10) {
             if(gameFunc.HUD.wrongInputs.length > 2){
-                console.log('OK SO.... 1')
                 gameFunc.resetGame('advanced', 'ಥ_ಥ')
-                console.log('OK SO.... 2')
                 gameFunc.returnGame('loss')
                 gameFunc.startGame('Too many guesses. New Round Starts in...', 3)  
             }
@@ -303,10 +303,9 @@ const gameTable = {
         gameFunc.HUD.settings = duration  
         // buttonDisplay ?
         if(setting !== 'clear'){
-            /* selectAll.namedItem(setting).disabled = true */
+            
             gameFunc.buttonDisplay(false, setting, true, true)
         } else {
-            /* selectAll.namedItem('start-game').disabled = true */
             gameFunc.buttonDisplay(false,'start-game', true, true)
         }
     },
@@ -314,7 +313,6 @@ const gameTable = {
     /* This method is responsible for the game timer (might need to make the htmlTimer 
         variable global in order to stop this started by setInterval) */
     countDown(num, nodeId, func, fSettings){   
-        console.log(gameFunc.HUD.settings)
         const targetNode = document.querySelector(nodeId)
         targetNode.innerHTML = num
         
@@ -394,26 +392,24 @@ const gameTable = {
             }
             if(except){
                 exempt.disabled = exceptToggle
-                console.log('Passed the except conditional')
             }
             if(stopButton === 'stopon'){
                 document.getElementById('stop-game').disabled = false 
-                console.log('Passed the stopbutton conditional')
              } else {
                 document.getElementById('stop-game').disabled = true
              }
         },
 
     userInput(num){
-        if (typeof num !== "number"){ 
-            return console.log('Stop It')
-        } 
-        
+        if(!num < 145 && !num > 1 || isNaN(num) === true){ 
+            gameFunc.insertGameMessage(`Choose a number between 2 & 145`, 2)
+            return;
+        }
         //Check Game
         const currentRanNum = gameFunc.HUD.factor
         const isFactorsArr = gameFunc.HUD.isFactors(currentRanNum)
         console.log('current factors user needs to guess ' + isFactorsArr)
-        const target = document.getElementById('answers')
+        const target = document.querySelector('#answers')
         const newSpan = document.createElement('span')
         
         // Checks to see if the (correct) input number was already chosen by user
@@ -460,7 +456,6 @@ const gameTable = {
                         target.appendChild(newSpan)
                         gameFunc.insertGameMessage('')
                         gameFunc.insertGameMessage(`${num} doesn't work.`, 2)
-                        console.log('Line 465')
                         return gameFunc.checkGame()
                     }
                 }

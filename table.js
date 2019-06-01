@@ -1,9 +1,20 @@
 // import {checkGame} from './main.js'
 let anyNum = document.querySelector('.numOnBoard')
 let body = document.querySelector('body')
-let gameCenter = document.querySelector('.game-center')
+let gameCenter = document.querySelector('#inside-game')
 const fullTable = Array.from(document.querySelectorAll('.numOnBoard'));
-const currentMouseOver = [anyNum];
+const checkStartButton = document.querySelector('#start-game')
+const allBoardNums = () => {
+    let nodelist = document.querySelectorAll('.numOnBoard')
+    return Array.from(nodelist)
+}
+const flatOutput = (arr) => {
+    arr.reduce((acc, cur) => {
+        return acc.concat(cur)
+    }, [])
+    return arr
+}
+
 
 // Create an array containing data for if statement to check;
 // Or, use getElementsByClassName then run a loop on it's return value.
@@ -26,19 +37,16 @@ const findFactors = (num, gridSize) => {
 };
 
 
-// I'M TRYING TO TURN THIS LIST OF NODES INTO AN ACTUAL ARRAY
+// I'M TRYING TO TURN THIS LIST OF NODES INTO AN ACTUAL ARRAY / Use this in conjunction
+// with find factors
 const getFactorRefer = (arr) => {
     const newArr = arr.map(element => {
         let nodeList = document.querySelectorAll('#numOnBoard'+element);
         return Array.from(nodeList)
     });
-    
-    // I don't think I need this...
-    const flatOutput = newArr.reduce((acc, cur) => {
-        return acc.concat(cur)  
-    }, [])
-    
-    return flatOutput;
+
+    const output = flatOutput(newArr) 
+    return output;
 };
 
 const highlightFactors = (arr) => {
@@ -139,43 +147,88 @@ const allInstances = (num) => {
     return findAll
 };
 
-gameCenter.addEventListener('click', (e) => {
+gameCenter.addEventListener('click', (e) => { 
+    if(checkStartButton.disabled){
+        return;
+    };
     if(e.target.closest('.numOnBoard')){   
         console.log(e.target.id, 'was clicked!')
-        let target = parseInt(e.target.innerHTML)
-        const allInstancesVar = allInstances(target)
+        let target = parseInt(e.target.innerHTML);
+        const allInstancesVar = allInstances(target);
         // let getIndexOf = fullTable.indexOf(target)
-        highlightFactors(allInstancesVar)
-
+        highlightFactors(allInstancesVar);
+        /* 
+            This highlights all the factors of all the instances of what needs to
+            be factored. 
+        */
         for(let i = 0; i < allInstancesVar.length; i++){
             highlightFactors(whatToHighlight(allInstancesVar[i]))
-        }
-        e.preventDefault()
-    }
+        };
+        e.preventDefault();
+    };
 });
 
 gameCenter.addEventListener('mouseover', function(e){
+    if(checkStartButton.disabled){
+        return;
+    };
+
     let closestTarget = e.target.closest('.numOnBoard')
     const yFactors = yTableFactors();
     const xFactors = xTableFactors();
 
     if(yFactors.includes(closestTarget) || xFactors.includes(closestTarget)){
         return;
-    }
+    };
+
     if(closestTarget){   
         let target = e.target
         let getIndexOf = fullTable.indexOf(target)
         let targetID = fullTable[getIndexOf]
         target.style.opacity = 1;
-        // Pushing the target in order to mouseout and use unhighlight
-        currentMouseOver.splice(0)
-        currentMouseOver.push(target)
-        console.log(currentMouseOver, 'current mouse over')
+        // Pushing the target in order to mouseout and use the unhighlight function
         highlightFactors(whatToHighlight(targetID))
-    }
-})
+    };
+});
 
-gameCenter.addEventListener('mouseout', function(){
-    console.log('eh?')
+gameCenter.addEventListener('mouseout', function(){  
     unHighlightFactors(null, 'all');
 })
+
+document.addEventListener('click', function(){
+    const allNums = flatOutput(allBoardNums())
+    if(checkStartButton.disabled){
+        allNums.forEach(num => {
+            num.classList.add('blurry-text')
+        })
+    }
+    if(!checkStartButton.disabled){
+        allNums.forEach(num => {
+            num.classList.remove('blurry-text')
+        })
+    }  
+})
+
+
+
+// Easy Mode should show how many factors there are under answers
+// Rules Button (On Right) should activate a transparent cover for the game
+// Change font (matrix? vscode glow)
+
+// Logic for showing factors during count down after guessing
+const displayAnswers = (num) => {
+    const allIn = allInstances(num)
+    // I need to unblur these blocks
+    allIn.forEach(e => {
+        e.style.opacity = 1;
+    })
+    highlightFactors(allIn)
+    for(let i = 0; i < allIn.length; i++){
+        let factor = whatToHighlight(allIn[i])
+        highlightFactors(factor)
+        factor.style.opacity = 1;
+    }; 
+    // I want to change the background red and have the text be red
+};
+
+
