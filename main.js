@@ -28,9 +28,9 @@ document.getElementById('inputN').addEventListener('keydown', function(e){
     }
 });
 
-// Show-table button event handler
-document.querySelector('#show-table').addEventListener('click', function(e){ 
-    document.querySelector('#show-table').disabled = true;
+// load-game button event handler
+document.querySelector('#load-game').addEventListener('click', function(e){ 
+    document.querySelector('#load-game').disabled = true;
     // Checks to see if table is already showing.
     if(document.querySelector('#numOnBoard1')) return;
     gameFunc.toggleInput('off')
@@ -103,6 +103,7 @@ const gameTable = {
            return target.appendChild(newE)
         })
     },
+    
     nextRowN(newRowArray, exampleArray){
         let holdZero = newRowArray[0] + 1
         let newArry = exampleArray.map(function(e){

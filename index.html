@@ -15,31 +15,28 @@
     <body>
        <header>Here We Are</header>
         <section>
-            <!-- <div id='test-div'>
-                <button type='button' id='new-button'>Test Case</button>
-            </div> -->
-            
-            
-            <div class="game">
-                
-                    <input id="inputN" type="text" placeholder="#">
+            <div class="game">             
+                <span class="right-button-container">
+                    <button type="button" id="instructions">?</button>
+                </span>
+
+                    <input id="inputN" type="text" placeholder="#">    
                     
-                    <button type="button" id="show-table">Load Game</button>
-                    <button type="button" id="easy" class="buttons">Easy</button>
-                    <button type="button" id="medium" class="buttons">Medium</button>
-                    <button type="button" id="hard" class="buttons">Hard</button>
-                    <button type="button" id="start-game" class="buttons">Start Game</button>
-                    
-                    <button type="button" id="stop-game" class="buttons">Stop Game</button>
-                    
+                    <span class="left-button-container">
+                        <button type="button" id="easy" class="buttons">Easy</button>
+                        <button type="button" id="medium" class="buttons">Medium</button>
+                        <button type="button" id="hard" class="buttons">Hard</button>
+                        <button type="button" id="start-game" class="buttons">Start Game</button>                  
+                        <button type="button" id="stop-game" class="buttons">Stop Game</button>   
+                    </span>
+                                   
                     <div class="game-center">
                             <div id="game-hud">
                                     <span id="timer-one">Game Timer</span>    
                                     <span id="game-timer">00</span>
                                     <span id="streak-counter">Win Streak:
                                             <span id="win-streak">0</span>
-                                    </span>
-                                    
+                                    </span>                                   
                                     <span id="best-streak-counter">Best: 
                                             <span id="best-counter">0</span>
                                     </span>
@@ -47,17 +44,15 @@
                                     <span id="rando-num"></span>
                 
                                     <div id="answers">
-                                        <p>Your Answers</p>
-                                    
+                                        <p>Your Answers</p>                   
                                     </div>
-
-                            </div>
-                        
-                            
-                            <!-- <span id="inputs">64</span> -->
+                            </div>                            
                             <div id="inside-game"></div>
                             <div id="game-messages"></div>         
-                        <div id="game-start-timer"></div>   
+                        <div id="game-start-timer"></div> 
+                <span>   
+                    <button type="button" id="load-game">Load Game</button>
+                </span> 
             </div>
         
         </section>

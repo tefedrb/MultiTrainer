@@ -4,16 +4,19 @@ let body = document.querySelector('body')
 let gameCenter = document.querySelector('#inside-game')
 const fullTable = Array.from(document.querySelectorAll('.numOnBoard'));
 const checkStartButton = document.querySelector('#start-game')
+
 const allBoardNums = () => {
     let nodelist = document.querySelectorAll('.numOnBoard')
-    return Array.from(nodelist)
-}
+    return Array.from(nodelist);
+};
+
 const flatOutput = (arr) => {
-    arr.reduce((acc, cur) => {
+    const output = arr.reduce((acc, cur) => {
         return acc.concat(cur)
     }, [])
-    return arr
-}
+
+    return output;
+};
 
 
 // Create an array containing data for if statement to check;
@@ -37,52 +40,47 @@ const findFactors = (num, gridSize) => {
 };
 
 
-// I'M TRYING TO TURN THIS LIST OF NODES INTO AN ACTUAL ARRAY / Use this in conjunction
-// with find factors
 const getFactorRefer = (arr) => {
     const newArr = arr.map(element => {
         let nodeList = document.querySelectorAll('#numOnBoard'+element);
         return Array.from(nodeList)
     });
-
     const output = flatOutput(newArr) 
     return output;
 };
 
-const highlightFactors = (arr) => {
+const highlightFactors = (elementArr, color) => {
     // when element is highlighted, we want to highlight nums in array
-    for(let i = 0; i < arr.length; i++){
-        arr[i].style.opacity = 1;
+    for(let i = 0; i < elementArr.length; i++){
+        elementArr[i].style.opacity = 1;
+        if(color){
+            elementArr[i].style.backgroundColor = color
+        }
     }
-    /*nodeList.forEach(node => {
-        node.style.opacity = 1;
-    }); */
 };
 
-const unHighlightFactors = (arr, all) => {
+const unHighlightFactors = (arr, all, color) => {
+    const removeColor = (e)=> {e.style.backgroundColor = 'yellow'}
     if(all){
-        fullTable.forEach(boardNum => {boardNum.style.opacity = .2})
-        return
+        fullTable.forEach(boardNum => {
+            if(color) {removeColor(boardNum)}
+            boardNum.style.opacity = .2
+        })
     } else {
         for(let i = 0; i < arr.length; i++){
             arr[i].style.opacity = .2;
         }
     }
-}
+};
 
-/* 
-    We want to be able to move our mouse over the numbers on the grid and have 
-    them light up with their factors on the x - y axis
-*/
 
 // Create seperate arrays that holds the x & y factors / nodes - 1 - 12
-
 const yTableFactors = () => {
     let counter = 1;
     const yTable = fullTable.filter(element => {
         if(counter === 1){
             counter++
-            return true;
+            return element;
         } else if(counter === 12){
             counter = 1
             return false;
@@ -91,39 +89,47 @@ const yTableFactors = () => {
             return false;
         }
     })
-    return yTable
+    return yTable;
 };
 
 const xTableFactors = () => {
     return fullTable.slice(0, 12)
 };
 
-// Write Out Logic for moused over numbers within game table
+// whatToHighLight is designed for mouseover
 
-const whatToHighlight = (boardNum) => {
+const whatToHighlight = (boardNum, add1) => {
     /* We need to first check to the left of each numBoard# to see when it 
      hits our y axis value - with this number(inner html) we multiply by 12
      and if we go back by that amount using our index value, we get to our
      x axis value that matches */
-    // const xFactors = xTableFactors();
     const yFactors = yTableFactors();
     const xFactors = xTableFactors();
-    const indexNumRef = fullTable.indexOf(boardNum)
+    const indexNumRef = fullTable.indexOf(boardNum);
     const output = [];
+    // Holds the y factor of our boardNum
     const yFacIndex = [];
-
-    for(let i = indexNumRef; i > 1; i--){
-        if(yFactors.includes(fullTable[i])){
-            output.push(fullTable[i])
-            yFacIndex.push(i)
-            break;
+   if(xFactors.includes(fullTable[indexNumRef])){
+       yFacIndex.push(0)
+   } else {
+    // This is used to find our corresponding Y (factor) index number (of boardNum)
+        for(let i = indexNumRef; i > 1; i--){
+            if(yFactors.includes(fullTable[i])){
+                output.push(fullTable[i])
+                // console.log(fullTable[i], `fullTable I, ${boardNum}`)
+                yFacIndex.push(i)
+                break;
+            }
         }
-    }
-    // Iterate through xFactors array using parseInt & .innerHTML and find the product that matches boardNum
-    for(let i = 0; i < xFactors.length; i++){
+    };
+    // Iterate through xFactors array using parseInt & .innerHTML and find the factors that multiply into boardNum
+    // then push those factors
+    if(add1) {output.push(xFactors[0])}
+    for(let i = 0; i < xFactors.length; i++){     
         let multiplyYbyX = parseInt(fullTable[yFacIndex[0]].innerHTML) * parseInt(xFactors[i].innerHTML);
         if(multiplyYbyX === parseInt(boardNum.innerHTML)){
             output.push(xFactors[i])
+            //console.log(xFactors[i], 'xFactors[i]')
         }
     };
     return output;
@@ -147,22 +153,24 @@ const allInstances = (num) => {
     return findAll
 };
 
+// Highlights
 gameCenter.addEventListener('click', (e) => { 
     if(checkStartButton.disabled){
         return;
     };
-    if(e.target.closest('.numOnBoard')){   
-        console.log(e.target.id, 'was clicked!')
+
+    if(e.target.tagName == 'A'){    
         let target = parseInt(e.target.innerHTML);
         const allInstancesVar = allInstances(target);
+        console.log(allInstancesVar)
         // let getIndexOf = fullTable.indexOf(target)
         highlightFactors(allInstancesVar);
         /* 
             This highlights all the factors of all the instances of what needs to
             be factored. 
         */
-        for(let i = 0; i < allInstancesVar.length; i++){
-            highlightFactors(whatToHighlight(allInstancesVar[i]))
+        for(let i = 0; i < allInstancesVar.length; i++){  
+            highlightFactors(whatToHighlight(allInstancesVar[i], 'add1'), 'blue')
         };
         e.preventDefault();
     };
@@ -172,42 +180,45 @@ gameCenter.addEventListener('mouseover', function(e){
     if(checkStartButton.disabled){
         return;
     };
-
-    let closestTarget = e.target.closest('.numOnBoard')
-    const yFactors = yTableFactors();
-    const xFactors = xTableFactors();
-
-    if(yFactors.includes(closestTarget) || xFactors.includes(closestTarget)){
-        return;
-    };
-
-    if(closestTarget){   
+    if(e.target.tagName == 'A'){
         let target = e.target
-        let getIndexOf = fullTable.indexOf(target)
-        let targetID = fullTable[getIndexOf]
-        target.style.opacity = 1;
-        // Pushing the target in order to mouseout and use the unhighlight function
-        highlightFactors(whatToHighlight(targetID))
+        const yFactors = yTableFactors();
+        const xFactors = xTableFactors();
+        highlightFactors([target], 'red')
+        if(yFactors.includes(target) || xFactors.includes(target)){
+            return;
+        };             
+            let getIndexOf = fullTable.indexOf(target)
+            let targetID = fullTable[getIndexOf]
+            target.style.opacity = 1;
+            // Pushing the target in order to mouseout and use the unhighlight function
+            highlightFactors(whatToHighlight(targetID))
     };
 });
 
-gameCenter.addEventListener('mouseout', function(){  
-    unHighlightFactors(null, 'all');
-})
 
+gameCenter.addEventListener('mouseout', function(e){  
+    if(e.target.tagName == 'A'){
+        unHighlightFactors(null, 'all', 'color');
+    } 
+});
+
+
+/* by-passes the need to communicate with main.js to check if the startbutton is pressed in order to
+ blur out text. */
 document.addEventListener('click', function(){
-    const allNums = flatOutput(allBoardNums())
+    const allNums = allBoardNums()
     if(checkStartButton.disabled){
         allNums.forEach(num => {
             num.classList.add('blurry-text')
         })
-    }
+    };
     if(!checkStartButton.disabled){
         allNums.forEach(num => {
             num.classList.remove('blurry-text')
         })
-    }  
-})
+    };  
+});
 
 
 
@@ -221,7 +232,7 @@ const displayAnswers = (num) => {
     // I need to unblur these blocks
     allIn.forEach(e => {
         e.style.opacity = 1;
-    })
+    });
     highlightFactors(allIn)
     for(let i = 0; i < allIn.length; i++){
         let factor = whatToHighlight(allIn[i])
