@@ -1,9 +1,11 @@
 // import {checkGame} from './main.js'
-let anyNum = document.querySelector('.numOnBoard')
-let body = document.querySelector('body')
-let gameCenter = document.querySelector('#inside-game')
+const anyNum = document.querySelector('.numOnBoard')
+const body = document.querySelector('body')
+const insideGame = document.querySelector('.inside-game')
 const fullTable = Array.from(document.querySelectorAll('.numOnBoard'));
 const checkStartButton = document.querySelector('#start-game')
+const userInter = document.querySelector('.grain');
+
 
 const allBoardNums = () => {
     let nodelist = document.querySelectorAll('.numOnBoard')
@@ -21,12 +23,6 @@ const flatOutput = (arr) => {
 
 // Create an array containing data for if statement to check;
 // Or, use getElementsByClassName then run a loop on it's return value.
-
-const gameMessageMultiply = (numOnBoardId) => {
-    const boardNumber = parseInt(numOnBoard.innerHTML);
-    const gameCenter = document.querySelector('.game-center');
-
-};
 
 const findFactors = (num, gridSize) => {
     const output = [];  
@@ -154,7 +150,7 @@ const allInstances = (num) => {
 };
 
 // Highlights
-gameCenter.addEventListener('click', (e) => { 
+insideGame.addEventListener('click', (e) => { 
     if(checkStartButton.disabled){
         return;
     };
@@ -176,7 +172,7 @@ gameCenter.addEventListener('click', (e) => {
     };
 });
 
-gameCenter.addEventListener('mouseover', function(e){
+insideGame.addEventListener('mouseover', function(e){
     if(checkStartButton.disabled){
         return;
     };
@@ -197,7 +193,7 @@ gameCenter.addEventListener('mouseover', function(e){
 });
 
 
-gameCenter.addEventListener('mouseout', function(e){  
+insideGame.addEventListener('mouseout', function(e){  
     if(e.target.tagName == 'A'){
         unHighlightFactors(null, 'all', 'color');
     } 

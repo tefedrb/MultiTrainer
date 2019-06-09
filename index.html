@@ -13,25 +13,43 @@
         <link rel="stylesheet" href="styles.css">
     </head>
     <body>
-       <header>Here We Are</header>
+        
+        <header>Here We Are</header>
         <section>
+                <img class='grain' src='./WoodGrainInterface.png'>
+                <img class='cover' src='./background.png'>
             <div class="game">             
                 <span class="right-button-container">
                     <button type="button" id="instructions">?</button>
                 </span>
-
-                    <input id="inputN" type="text" placeholder="#">    
-                    
+                    <input id="inputN" type="text" placeholder="#">                
                     <span class="left-button-container">
-                        <button type="button" id="easy" class="buttons">Easy</button>
-                        <button type="button" id="medium" class="buttons">Medium</button>
-                        <button type="button" id="hard" class="buttons">Hard</button>
-                        <button type="button" id="start-game" class="buttons">Start Game</button>                  
-                        <button type="button" id="stop-game" class="buttons">Stop Game</button>   
+                        <button type="button" id="easy" class="mainBtn">Easy</button>
+                        <button type="button" id="medium" class="mainBtn">Medium</button>
+                        <button type="button" id="hard" class="mainBtn">Hard</button>
+                        <button type="button" id="start-game" class="mainBtn">Start Game</button>                  
+                        <button type="button" id="stop-game" class="mainBtn">Stop Game</button>   
                     </span>
                                    
                     <div class="game-center">
-                            <div id="game-hud">
+                            <div class="flyout-menu">
+                                    <div class='flyout-menu-wrapper'>
+                                            <h1>Times Table Game </h1>
+                                            <p>Instructions:</p>
+                                            <p class='list'>
+                                                <ul>
+                                                    <li>When you start the game you will be given a certain amount of time to factor the number given.</li> 
+                                                    <li>You enter the factors via the input box.</li> 
+                                                    <li>You can only input factors 2 - 12 for the given number.</li>
+                                                    <li>When you input all of the factors of the given number you move on to the next round.</li>
+                                                    <li>Your best win-streak is tallied.</li>
+                                                    <li>The board is only used as a reference.</li>
+                                                    <li>Dont forget to choose your difficulty.</li>
+                                                </ul>
+                                            </p> 
+                                    </div>
+                                </div>        
+                            <div class="game-hud">
                                     <span id="timer-one">Game Timer</span>    
                                     <span id="game-timer">00</span>
                                     <span id="streak-counter">Win Streak:
@@ -46,11 +64,16 @@
                                     <div id="answers">
                                         <p>Your Answers</p>                   
                                     </div>
-                            </div>                            
-                            <div id="inside-game"></div>
+                            </div>
+                            <div class='gameTitleHolder'>
+                                    <span class='gameTitle'>Times Table Trainer</span>
+                                    <span class='versionNum'>Version 1.00</span>
+                                </div>                    
+                            <div class="inside-game"></div>
                             <div id="game-messages"></div>         
-                        <div id="game-start-timer"></div> 
-                <span>   
+                        <div id="game-start-timer"></div>
+                    </div>     
+                <span class='bottom-button-container'>   
                     <button type="button" id="load-game">Load Game</button>
                 </span> 
             </div>

@@ -1,56 +1,107 @@
 
+const inputField = document.querySelector('#inputN');
+const startBtn = document.querySelector('#start-game');
+const stopBtn = document.querySelector('#stop-game');
+const easyBtn = document.querySelector('#easy');
+const mediumBtn = document.querySelector('#medium');
+const hardBtn = document.querySelector('#hard');
+const leftBtns = document.querySelector('.left-button-container');
+const instructions = document.querySelector('#instructions');
+const loadBtn = document.querySelector('#load-game');
+const gameDiv = document.querySelector('.game');
+const HUDnode = document.querySelector('.game-hud')
+const startTimer = document.querySelector('#game-start-timer');
+const insideGameDiv = document.querySelector('.inside-game');
+const gameCenter = document.querySelector('.game-center');
+const flyOut = document.querySelector('.flyout-menu');
+const fullTable2 = Array.from(document.querySelectorAll('.numOnBoard'));
+
+
+
+
+const infoToggle = (disable) => {
+    if(disable === 'disable') {return instructions.disabled = true}
+    if(disable === 'enable') {return instructions.disabled = false}
+
+    if(startBtn.disabled) return;  
+    const toggleBtns = (leftBtnsOn, gameOn) => {     
+        if(leftBtnsOn){leftBtns.style.display = 'none';}
+        if(gameOn){leftBtns.style.display = 'inline';}
+        gameCenter.classList.toggle('hide-game');
+        flyOut.classList.toggle('show-fly-out'); 
+    }
+    if(leftBtns.style.display === 'inline'){
+        toggleBtns(true)
+        leftBtns.style.display = 'none';
+    } else if(loadBtn.disabled){
+        toggleBtns(false, true)
+    } else {
+        toggleBtns()
+    }
+};
+
 
 /* gameFunc.toggleInput() */
-
-document.getElementById('easy').addEventListener('click', ()=> {gameFunc.setDifficulty('easy', 15, true)})
-document.getElementById('medium').addEventListener('click', ()=> {gameFunc.setDifficulty('medium', 10, true)})
-document.getElementById('hard').addEventListener('click', ()=> {gameFunc.setDifficulty('hard', 5, true)})
+gameDiv.addEventListener('click', (e) => {
+    if(e.target == easyBtn){
+        gameFunc.setDifficulty('easy', 15, true)
+    } else if(e.target == mediumBtn){
+        gameFunc.setDifficulty('medium', 10, true)
+    } else if(e.target == hardBtn){
+        gameFunc.setDifficulty('hard', 5, true)
+    } else if(e.target == instructions){
+        infoToggle()
+    }
+});
 
 // Start button event handler // I added a reset game paramater
-document.getElementById('start-game').addEventListener('click', ()=> {
+startBtn.addEventListener('click', ()=> {
+    infoToggle('disable')
     gameFunc.HUD.gameOn = true
     gameFunc.resetGame()
     gameFunc.startGame('New Round Starts in...', 5)
 });
 
 // Stop button event handler
-document.getElementById('stop-game').addEventListener('click', ()=>{gameFunc.stopGame()})
+stopBtn.addEventListener('click', ()=>{
+    infoToggle('enable')
+    gameFunc.stopGame()
+})
 
 // Input field event handler (after hitting enter)
-document.getElementById('inputN').addEventListener('keydown', function(e){
-    
+inputField.addEventListener('keydown', function(e){ 
     const keyC = e.keyCode
     let currentInput = 0
     if (keyC === 13){
-        currentInput = parseInt(document.getElementById('inputN').value)
+        currentInput = parseInt(inputField.value)
         gameFunc.userInput(currentInput)
-        document.getElementById('inputN').value = ''
+        inputField.value = ''
     }
 });
 
 // load-game button event handler
-document.querySelector('#load-game').addEventListener('click', function(e){ 
-    document.querySelector('#load-game').disabled = true;
+loadBtn.addEventListener('click', function(e){ 
+    if(gameCenter.classList.contains('hide-game')){infoToggle()}
+    
+    document.querySelector('.gameTitleHolder').style.display = 'none';
+
+    inputField.style.display = 'block';
+    loadBtn.disabled = true;
     // Checks to see if table is already showing.
     if(document.querySelector('#numOnBoard1')) return;
-    gameFunc.toggleInput('off')
+    gameFunc.toggleInput('off');
     // Show game-hud
-    document.querySelector('#game-hud').style.display = 'block'
+    HUDnode.style.display = 'block';
     // Show Buttons by adding a class to the corresponding elements using class 'buttons'
-    let getButtons = document.getElementsByClassName('buttons')
-    for(let i = 0; i < getButtons.length; i++){
-        getButtons[i].style.display = 'block' /*
-        maybe delete this from styles.css if all works
-         classList.add('buttonsAppear\') */
-    } 
+    leftBtns.style.display = 'inline';
     /* I'm using this function to grey out "start-game" until
      the user clicks on a difficulty */
-    gameFunc.setDifficulty('easy', 15, true)
+    gameFunc.setDifficulty('easy', 15, true);
     // By default we want the stop-game button disabled until we start the game
-    document.querySelector('#stop-game').disabled = true
+    stopBtn.disabled = true;
     // This code sets up the multiplication chart
     gameTable.renderTable()  
-
+    
     // add table.js to index.html
     const htmlBody = document.querySelector('body');
     let newScript = document.createElement('script')
@@ -117,7 +168,7 @@ const gameTable = {
     renderTable(){
         let newArr = gameTable.firstRow
         for(let i = 1; i < 13; i++) {
-            gameTable.printRowN(newArr, '#inside-game', 'a', 'numOnBoard')   // old arg 'numOnBoard'
+            gameTable.printRowN(newArr, '.inside-game', 'a', 'numOnBoard')   // old arg 'numOnBoard'
             newArr = gameTable.nextRowN(newArr, gameTable.firstRow)    
         }  
     }
@@ -161,7 +212,7 @@ const gameTable = {
         // Choose a random number based on the a tags created under '#inside-game'. Made to be easily updated.
         randomNumber(){
             // This saves the # value of the last child of #inside-game. 
-            let highestNum = parseInt(document.getElementById('inside-game').lastChild.innerHTML)
+            let highestNum = parseInt(document.querySelector('.inside-game').lastChild.innerHTML)
             let chooseNum = 0
             let killSwitch = false;
 
@@ -187,21 +238,19 @@ const gameTable = {
         
         gameFunc.insertGameMessage(message)
     
-        document.querySelector('#game-start-timer').innerHTML = timer
+        startTimer.innerHTML = timer
         
         const gameStartCount = () => {
             // THIS IS AT THE BOTTOM OF THE GAME
-            document.querySelector('#game-start-timer').innerHTML--
-            let htmlTimer = parseInt(document.querySelector('#game-start-timer').innerHTML)
+            startTimer.innerHTML--
+            let htmlTimer = parseInt(startTimer.innerHTML)
         
             if (htmlTimer === 0 || htmlTimer < 0){
                     // New addition - trying to fix issues
                     gameFunc.toggleInput('on')
                     document.querySelector('#game-messages').textContent = ''
-                    document.querySelector('#game-start-timer').textContent = ''
-                    
-                    gameFunc.HUD.setFactor(gameFunc.HUD.randomNumber())
-                    
+                    startTimer.textContent = ''                   
+                    gameFunc.HUD.setFactor(gameFunc.HUD.randomNumber())                   
                     setIntervals.clear('gameStartCount')
                     // This should always be the first time gameOn becomes true
                     gameFunc.HUD.gameOn = true
@@ -224,7 +273,7 @@ const gameTable = {
         let resetLevel = resetType
         let element = document.querySelector('#answers')
 
-        if(document.querySelector('#start-game').disabled = true && resetLevel === 'basic'){
+        if(startBtn.disabled = true && resetLevel === 'basic'){
             return gameFunc.setDifficulty(undefined, gameFunc.HUD.settings, 'buttons')
         }
         
@@ -265,7 +314,7 @@ const gameTable = {
         },
 
     // Checks status of game, i.e. If difficultly is high, check to see if there are too many wrong inputs
-     checkGame(check){
+     checkGame(){
         // Checks if game clock is at zero (write code here...)
         let gameTimer = parseInt(document.querySelector('#game-timer').innerHTML)
         
@@ -339,31 +388,29 @@ const gameTable = {
     
     insertGameMessage(message, duration, clock, func, val){
         const messageNode = document.getElementById('game-messages')
-        const visualClock = document.getElementById('game-start-timer')
-
         let timer = parseInt(duration)
 
         if(typeof duration === 'string') {
-            visualClock.innerHTML = duration
+            startTimer.innerHTML = duration
         }
             if(typeof duration === 'number'){   
                
                 const messageTimer = () => {
                     if(duration && clock){
-                        visualClock.innerHTML = timer   
+                        startTimer.innerHTML = timer   
                         timer-- 
                     } else {
                         timer--
                     }
                     if (timer === -1 && func) {
                         messageNode.textContent = ''
-                        visualClock.textContent = ''
+                        startTimer.textContent = ''
                         func(val)
                         return setIntervals.clear(messageTimer)
                     }
                     if(timer === -1){
                         messageNode.textContent = ''
-                        visualClock.textContent = ''
+                        startTimer.textContent = ''
                         return setIntervals.clear(messageTimer)
                     }
                 }
@@ -373,20 +420,19 @@ const gameTable = {
     },
 
     toggleInput(t){
-        const userInput = document.querySelector('#inputN')
         if(t === 'on'){
-            userInput.disabled = false
-            userInput.setAttribute('placeholder', '#')
-            return userInput.focus()
+            inputField.disabled = false
+            inputField.setAttribute('placeholder', '')
+            inputField.focus()
         } else {
-            userInput.setAttribute('placeholder', 'X')
-            return userInput.disabled = true
+            inputField.setAttribute('placeholder', 'Input')
+            inputField.disabled = true
         }
     }, 
 
     buttonDisplay(toggleAll, except, exceptToggle, stopOff){
         let exempt = document.querySelector('#' + except)
-        let allButtons = document.getElementsByClassName('buttons')
+        let allButtons = document.getElementsByClassName('mainBtn')
         let stopButton = stopOff
             for(let i = 0; i < allButtons.length; i++){
                 allButtons[i].disabled = toggleAll
@@ -395,9 +441,9 @@ const gameTable = {
                 exempt.disabled = exceptToggle
             }
             if(stopButton === 'stopon'){
-                document.getElementById('stop-game').disabled = false 
+                stopBtn.disabled = false 
              } else {
-                document.getElementById('stop-game').disabled = true
+                stopBtn.disabled = true
              }
         },
 
