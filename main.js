@@ -1,4 +1,9 @@
 
+// I want to have main.js communicate with table.js
+// Change button cosmetics
+// Watch the table render out / change colors
+// Fix bottom corners of wooden interface.
+
 const inputField = document.querySelector('#inputN');
 const startBtn = document.querySelector('#start-game');
 const stopBtn = document.querySelector('#stop-game');
@@ -82,7 +87,7 @@ inputField.addEventListener('keydown', function(e){
 // load-game button event handler
 loadBtn.addEventListener('click', function(e){ 
     if(gameCenter.classList.contains('hide-game')){infoToggle()}
-    
+    // Added this recently
     document.querySelector('.gameTitleHolder').style.display = 'none';
 
     inputField.style.display = 'block';
