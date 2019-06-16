@@ -1,2 +1,2 @@
-# multiplication-times-table-game
-A game designed to help memorize the 12 times table 
+# times-table-trainer
+Designed to help memorize the 12 times table
