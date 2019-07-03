@@ -192,13 +192,11 @@ insideGame.addEventListener('mouseover', function(e){
     };
 });
 
-
 insideGame.addEventListener('mouseout', function(e){  
     if(e.target.tagName == 'A'){
         unHighlightFactors(null, 'all', 'color');
-    } 
+    }
 });
-
 
 /* by-passes the need to communicate with main.js to check if the startbutton is pressed in order to
  blur out text. */

@@ -25,13 +25,69 @@ body {
     text-shadow: 0px 0px 15px #ff005b;
 }
 
+.loader-container {
+    position: absolute;
+    background-color: white;
+    z-index: 6;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    height: 100vh;
+    width: 100vw;
+    transition: all .5s ease-in-out;
+}
+
+.loader {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border-radius: 100%;
+    width: 50px;
+    height: 50px;
+    background-color: transparent;
+    border: 5px solid rgba(0, 0, 0, 0.158);
+    border-top-color: green;
+    animation: round .5s linear infinite;
+}
+
+@keyframes round{
+    from{transform: rotate(0deg)}
+    to{transform: rotate(360deg)}
+}
+
 header {
     position: absolute;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+    /* flex-direction: row;
+    justify-content: center; */
     left: 50%;
     transform: translateX(-50%);
+}
+
+button {
+    cursor: pointer;
+}
+
+.home-btn {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 6px 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  opacity: .2;
+  transition: all .2s ease;
+}
+
+.home-btn:hover {
+    opacity: 1;
+    box-shadow: 0px 1px 4px -1px #00000075;
 }
 
 a {
@@ -161,7 +217,6 @@ div.game {
 }
 
 #easy {
-    /* display: none; */
     position: absolute;
     top: 45px;
     left: 49px;
@@ -170,7 +225,6 @@ div.game {
 }
 
 #medium {
-    /* display: none; */
     position: absolute;
     top: 45px;
     left: 94px;
@@ -179,7 +233,6 @@ div.game {
 }
 
 #hard {
-    /* display: none; */
     position: absolute;
     top: 45px;
     left: 157px;
@@ -188,7 +241,6 @@ div.game {
 }
 
 #start-game {
-    /* display: none; */
     position: absolute;
     top: 21px;
     left: 49px;
@@ -197,7 +249,6 @@ div.game {
 }
 
 #stop-game {
-    /* display: none; */
     position: absolute;
     top: 21px;
     left: 125px;

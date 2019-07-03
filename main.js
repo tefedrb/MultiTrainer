@@ -20,9 +20,21 @@ const insideGameDiv = document.querySelector('.inside-game');
 const gameCenter = document.querySelector('.game-center');
 const flyOut = document.querySelector('.flyout-menu');
 const fullTable2 = Array.from(document.querySelectorAll('.numOnBoard'));
+const homeBtn = document.querySelector('.home-btn');
+const loading = document.querySelector('.loader-container');
 
+homeBtn.addEventListener('click', () => {
+    window.location.replace('/indexx.html')
+})
 
-
+window.onload = function(){
+    setTimeout(function(){
+        loading.style.opacity = 0
+    }, 500)
+    setTimeout(function(){
+        loading.parentNode.removeChild(loading)
+    }, 1500)
+}
 
 const infoToggle = (disable) => {
     if(disable === 'disable') {return instructions.disabled = true}
