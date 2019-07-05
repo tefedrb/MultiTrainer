@@ -1,2 +1,2 @@
 # times-table-trainer
-Designed to help memorize the 12 times table
+A simple game designed to help memorize the 12 times table
