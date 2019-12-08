@@ -1,11 +1,11 @@
 @font-face {
-    src: url(./fonts/alarm\ clock.ttf);
+    src: url(fonts/alarmClock.ttf);
     font-family: alarm;
 }
 
 @font-face {
-    src: url(./fonts/Calculator.ttf);
-    font-family: calculator
+    src: url(fonts/Calculator.ttf);
+    font-family: calculator;
 }
 
 body {
@@ -14,11 +14,6 @@ body {
     font-size: 20px;
     line-height: 1.2;
     color: #fff;
-   /*  background: linear-gradient(
-        to bottom,
-        rgb(226, 226, 226), 
-        rgb(129, 129, 129)
-      );  */
     height: 100%;
     width: 100%;
     overflow-x: hidden;

@@ -16,7 +16,6 @@ const flatOutput = (arr) => {
     const output = arr.reduce((acc, cur) => {
         return acc.concat(cur)
     }, [])
-
     return output;
 };
 

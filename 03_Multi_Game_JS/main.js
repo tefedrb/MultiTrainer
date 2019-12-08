@@ -123,7 +123,7 @@ loadBtn.addEventListener('click', function(e){
     const htmlBody = document.querySelector('body');
     let newScript = document.createElement('script')
     newScript.setAttribute('type', 'text/javascript')
-    newScript.setAttribute('src', './03 JS/table.js')
+    newScript.setAttribute('src', './03_Multi_Game_JS/table.js')
     htmlBody.appendChild(newScript)
 }, false);
 
