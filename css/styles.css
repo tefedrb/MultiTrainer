@@ -1,16 +1,16 @@
 @font-face {
-    src: url(fonts/alarmClock.ttf);
-    font-family: alarm;
+    src: url(../fonts/alarmClock.ttf);
+    font-family: "alarm";
 }
 
 @font-face {
-    src: url(fonts/Calculator.ttf);
-    font-family: calculator;
+    src: url(../fonts/Calculator.ttf);
+    font-family: "calculator";
 }
 
 body {
     /* font-family: 'Major Mono Display', monospace; */
-    font-family: calculator;
+    font-family: "calculator";
     font-size: 20px;
     line-height: 1.2;
     color: #fff;

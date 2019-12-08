@@ -112,7 +112,7 @@ loadBtn.addEventListener('click', function(e){
     // By default we want the stop-game button disabled until we start the game
     stopBtn.disabled = true;
     // This code sets up the multiplication chart
-    gameTable.renderTable()  
+    gameTable.renderTable();  
     
     // add table.js to index.html
     const htmlBody = document.querySelector('body');
