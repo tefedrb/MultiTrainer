@@ -20,12 +20,7 @@ const insideGameDiv = document.querySelector('.inside-game');
 const gameCenter = document.querySelector('.game-center');
 const flyOut = document.querySelector('.flyout-menu');
 const fullTable2 = Array.from(document.querySelectorAll('.numOnBoard'));
-const homeBtn = document.querySelector('.home-btn');
 const loading = document.querySelector('.loader-container');
-
-homeBtn.addEventListener('click', () => {
-    window.location.replace('/indexx.html')
-})
 
 window.onload = function(){
     setTimeout(function(){
