@@ -466,7 +466,7 @@ const gameTable = {
         //Check Game
         const currentRanNum = gameFunc.HUD.factor
         const isFactorsArr = gameFunc.HUD.isFactors(currentRanNum)
-        console.log('current factors user needs to guess ' + isFactorsArr)
+        // console.log('current factors user needs to guess ' + isFactorsArr)
         const target = document.querySelector('#answers')
         const newSpan = document.createElement('span')
         

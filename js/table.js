@@ -157,7 +157,6 @@ insideGame.addEventListener('click', (e) => {
     if(e.target.tagName == 'A'){    
         let target = parseInt(e.target.innerHTML);
         const allInstancesVar = allInstances(target);
-        console.log(allInstancesVar)
         // let getIndexOf = fullTable.indexOf(target)
         highlightFactors(allInstancesVar);
         /* 
@@ -175,14 +174,10 @@ insideGame.addEventListener('mouseover', function(e){
     if(checkStartButton.disabled){
         return;
     };
-    console.log("here");
     if(e.target.tagName == 'A'){
         let target = e.target;
         const yFactors = yTableFactors();
         const xFactors = xTableFactors();
-        console.log(yFactors, "<--- y Factors");
-        console.log(xFactors, "<--- x Factors");
-
         highlightFactors([target], 'red')
         if(yFactors.includes(target) || xFactors.includes(target)){
             return;
