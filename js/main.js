@@ -113,13 +113,12 @@ loadBtn.addEventListener('click', function(e){
     stopBtn.disabled = true;
     // This code sets up the multiplication chart
     gameTable.renderTable();  
-    
     // add table.js to index.html
     const htmlBody = document.querySelector('body');
-    let newScript = document.createElement('script')
-    newScript.setAttribute('type', 'text/javascript')
-    newScript.setAttribute('src', './03_Multi_Game_JS/table.js')
-    htmlBody.appendChild(newScript)
+    let newScript = document.createElement('script');
+    newScript.setAttribute('type', 'text/javascript');
+    newScript.setAttribute('src', 'js/table.js');
+    htmlBody.appendChild(newScript);
 }, false);
 
 
